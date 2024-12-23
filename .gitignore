@@ -1,0 +1,5 @@
+ai-service/node_modules/
+ai-service/package-lock.json
+ai-service/app-errors.log
+ai-service/full-log.log
+ai-service/.env
