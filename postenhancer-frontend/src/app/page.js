@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useRef, useEffect } from 'react'
-import { Globe, Clock, Instagram, Twitter, Facebook, Linkedin, Sun, Moon } from 'lucide-react'
+import { Globe, Clock, Instagram, Twitter, Facebook,Youtube, Linkedin, Sun, Moon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -15,13 +15,15 @@ const SocialTimingPlatform = () => {
   const [bestTime, setBestTime] = useState(null)
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [adKey, setAdKey] = useState(0)
-
+  const [error, setError] = useState(null)
   const platforms = [
-    { id: 'instagram', name: 'Instagram', icon: Instagram },
-    { id: 'twitter', name: 'Twitter', icon: Twitter },
-    { id: 'facebook', name: 'Facebook', icon: Facebook },
-    { id: 'linkedin', name: 'LinkedIn', icon: Linkedin }
+    { id: 'Instagram', name: 'Instagram', icon: Instagram },
+    { id: 'Twitter', name: 'Twitter', icon: Twitter },
+    { id: 'Facebook', name: 'Facebook', icon: Facebook },
+    { id: 'Linkedin', name: 'LinkedIn', icon: Linkedin },
+    { id: 'YouTube', name: 'YouTube', icon: Youtube }, // Assuming the icon is 'youtube'
   ]
+  
 
   const toggleTheme = () => {
     setIsDarkMode(prev => !prev)
@@ -30,14 +32,19 @@ const SocialTimingPlatform = () => {
 
   const fetchBestTime = async () => {
     setLoading(true)
+    setError(null)
     setAdKey(prev => prev + 1)
     try {
+      console.log("selected date:::::", selectedDate)
       const response = await fetch(
-        `https://post-enhancer-backend-apis-dot-dailysync-backend-service.et.r.appspot.com/best-time?platform=${selectedPlatform}&date=${selectedDate}`
+        `/api/best-time?platform=${selectedPlatform}&date=${selectedDate}`
       )
       const data = await response.json()
       console.log("data::::::", data)
-      setBestTime(data.bestTime)
+      if(data && data.message === "No record found for the specified platform.")
+        setError("No records found for selected options")
+      else
+        setBestTime(data.best_time)
       setShowResult(true)
     } catch (error) {
       console.error('Error fetching best time:', error)
@@ -84,8 +91,12 @@ const SocialTimingPlatform = () => {
                         <SelectValue placeholder="Select Platform" />
                       </SelectTrigger>
                       <SelectContent className={`w-full rounded-lg shadow-lg ${isDarkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-gray-200 text-black'}`}>
-                        {platforms.map(platform => (
-                          <SelectItem key={platform.id} value={platform.id} className={`w-full px-4 py-2 rounded-lg cursor-pointer ${isDarkMode ? 'hover:bg-gray-700 focus:bg-gray-700' : 'hover:bg-gray-100 focus:bg-gray-100'} transition-all duration-200`}>
+                        {platforms.map((platform) => (
+                          <SelectItem
+                            key={platform.id}
+                            value={platform.id}
+                            className={`w-full px-4 py-2 rounded-lg cursor-pointer ${isDarkMode ? 'hover:bg-gray-700 focus:bg-gray-700' : 'hover:bg-gray-100 focus:bg-gray-100'} transition-all duration-200`}
+                          >
                             <div className="flex items-center space-x-2">
                               <platform.icon className="h-4 w-4" />
                               <span>{platform.name}</span>
@@ -94,6 +105,7 @@ const SocialTimingPlatform = () => {
                         ))}
                       </SelectContent>
                     </Select>
+
                   </div>
 
                   <div className="w-full">
@@ -122,7 +134,7 @@ const SocialTimingPlatform = () => {
                   )}
                 </Button>
 
-                {showResult && (
+                {!error && showResult && (
                   <div className={`rounded-xl p-8 ${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-gray-50 border border-gray-200'} transform transition-all duration-500 hover:scale-105`}>
                     <div className="flex items-center justify-center space-x-4">
                       <Clock className="h-8 w-8" />
@@ -130,11 +142,22 @@ const SocialTimingPlatform = () => {
                         <h3 className={`text-sm uppercase font-semibold tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                           Best Time to Post
                         </h3>
-                        <p className="text-3xl font-bold mt-2">{bestTime}</p>
+                        <p className="text-2xl font-bold mt-2">{bestTime}</p>
                       </div>
                     </div>
                   </div>
                 )}
+                {error && (
+                  <div className={`rounded-xl p-8 ${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-gray-50 border border-gray-200'} transform transition-all duration-500 hover:scale-105`}>
+                    <div className="flex items-center justify-center space-x-4">
+                      <Clock className="h-8 w-8" />
+                      <div className="text-center">
+                        <p className="text-1xl font-bold mt-2">{error}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
               </div>
             </CardContent>
           </Card>
