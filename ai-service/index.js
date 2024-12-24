@@ -151,30 +151,12 @@ async function closeResources() {
   }
 }
 
-exports.socialMediaTimingPrediction = async () => {
+exports.socialMediaTimingPrediction = async (req, res) => {
   try {
-    logService.info('Executing social media timing prediction function');
     const predictionResults = await fetchOptimalTimes(allCountries, allPlatforms);
-    if (!predictionResults || Object.keys(predictionResults).length === 0) {
-      throw new Error('No data received from the prediction engine');
-    }
-
     await savePredictions(predictionResults);
-    logService.info('Predictions processed and stored successfully');
-
-    // res.status(200).json({
-    //   message: 'Data processed and saved successfully',
-    //   data: predictionResults,
-    // });
+    res.status(200).send('Predictions processed and stored successfully');
   } catch (err) {
-    logService.error('Error during execution:', err);
-    // res.status(500).json({
-    //   error: err.message,
-    //   timestamp: new Date().toISOString(),
-    // });
-  } finally {
-    await closeResources();
+    res.status(500).send('Error during execution: ' + err.message);
   }
-};
-
-this.socialMediaTimingPrediction()
+}
