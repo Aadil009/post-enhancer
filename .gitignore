@@ -3,3 +3,9 @@ ai-service/package-lock.json
 ai-service/app-errors.log
 ai-service/full-log.log
 ai-service/.env
+
+backend-apis/node_modules/
+backend-apis/package-lock.json
+backend-apis/app-errors.log
+backend-apis/full-log.log
+backend-apis/.env
