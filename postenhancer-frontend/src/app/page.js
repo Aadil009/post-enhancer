@@ -20,7 +20,7 @@ const SocialTimingPlatform = () => {
     { id: 'Instagram', name: 'Instagram', icon: Instagram },
     { id: 'Twitter', name: 'Twitter', icon: Twitter },
     { id: 'Facebook', name: 'Facebook', icon: Facebook },
-    { id: 'Linkedin', name: 'LinkedIn', icon: Linkedin },
+    { id: 'LinkedIn', name: 'LinkedIn', icon: Linkedin },
     { id: 'YouTube', name: 'YouTube', icon: Youtube }, // Assuming the icon is 'youtube'
   ]
   
