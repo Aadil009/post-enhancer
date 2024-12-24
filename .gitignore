@@ -6,6 +6,9 @@ ai-service/.env
 
 backend-apis/node_modules/
 backend-apis/package-lock.json
-backend-apis/app-errors.log
-backend-apis/full-log.log
 backend-apis/.env
+
+postenhancer-frontend/node_modules/
+postenhancer-frontend/package-lock.json
+postenhancer-frontend/.env
+postenhancer-frontend/.next/
